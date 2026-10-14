@@ -1,0 +1,634 @@
+{
+ "args": {
+  "data_dir": "../../data/amazon-lmrc/apply",
+  "out": "results/spread_n14_k3_t0.9.json",
+  "stops": "14",
+  "vans": "3",
+  "tightness": "0.9",
+  "sampling": "spread",
+  "instances": "10",
+  "time_limit": "300"
+ },
+ "results": [
+  {
+   "name": "15baae2d-spread-n14-k3-t0.9-s0",
+   "route_id": "RouteID_15baae2d-bf07-4967-956a-173d4036613f",
+   "stops": 14,
+   "packages": 24,
+   "vans": 3,
+   "capacity_cm3": 104809,
+   "floor_s": 9765,
+   "joint": {
+    "cost_s": 12720,
+    "status": "OPTIMAL",
+    "proved": true,
+    "bound": 12720.0,
+    "seconds_total": 0.5560038340045139,
+    "seconds_to_best": 0.13089437497546896,
+    "split_stops": 0
+   },
+   "ffd": {
+    "cost_s": 13970,
+    "gap_rel": 0.09827044025157233,
+    "gap_g": 0.40916530278232405,
+    "reward": 0.5529340181723468,
+    "split_stops": 3
+   },
+   "stop_aware": [
+    {
+     "cost_s": 13337,
+     "gap_rel": 0.048506289308176104,
+     "gap_g": 0.20196399345335517,
+     "reward": 0.7341537616948182,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 13727,
+     "gap_rel": 0.07916666666666666,
+     "gap_g": 0.32962356792144026,
+     "reward": 0.613792479879663,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 13641,
+     "gap_rel": 0.07240566037735849,
+     "gap_g": 0.30147299509001635,
+     "reward": 0.6377577772765128,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 13692,
+     "gap_rel": 0.07641509433962264,
+     "gap_g": 0.3181669394435352,
+     "reward": 0.6233832718303776,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 13570,
+     "gap_rel": 0.06682389937106918,
+     "gap_g": 0.27823240589198034,
+     "reward": 0.6585855751748949,
+     "split_stops": 0
+    }
+   ]
+  },
+  {
+   "name": "2b8df66d-spread-n14-k3-t0.9-s1",
+   "route_id": "RouteID_2b8df66d-fcd4-438e-931c-3b84b36a5c6b",
+   "stops": 14,
+   "packages": 30,
+   "vans": 3,
+   "capacity_cm3": 150989,
+   "floor_s": 8268,
+   "joint": {
+    "cost_s": 10787,
+    "status": "OPTIMAL",
+    "proved": true,
+    "bound": 10787.0,
+    "seconds_total": 0.7307664999971166,
+    "seconds_to_best": 0.25334204197861254,
+    "split_stops": 0
+   },
+   "ffd": {
+    "cost_s": 12742,
+    "gap_rel": 0.1812366737739872,
+    "gap_g": 0.7464681176021383,
+    "reward": 0.379769503189272,
+    "split_stops": 5
+   },
+   "stop_aware": [
+    {
+     "cost_s": 11673,
+     "gap_rel": 0.08213590432928525,
+     "gap_g": 0.33829705994654446,
+     "reward": 0.6066763286591406,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 11701,
+     "gap_rel": 0.08473162139612496,
+     "gap_g": 0.34898816342115313,
+     "reward": 0.5980729981189512,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 11478,
+     "gap_rel": 0.0640585890423658,
+     "gap_g": 0.26384116074837727,
+     "reward": 0.6719765990965177,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 11673,
+     "gap_rel": 0.08213590432928525,
+     "gap_g": 0.33829705994654446,
+     "reward": 0.6066763286591406,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 11568,
+     "gap_rel": 0.07240196532863633,
+     "gap_g": 0.29820542191676214,
+     "reward": 0.6406279567217004,
+     "split_stops": 0
+    }
+   ]
+  },
+  {
+   "name": "3f166f0e-spread-n14-k3-t0.9-s2",
+   "route_id": "RouteID_3f166f0e-fd2e-47ab-96a0-6cbc99cc6eef",
+   "stops": 14,
+   "packages": 20,
+   "vans": 3,
+   "capacity_cm3": 80522,
+   "floor_s": 14886,
+   "joint": {
+    "cost_s": 16950,
+    "status": "OPTIMAL",
+    "proved": true,
+    "bound": 16950.0,
+    "seconds_total": 1.521306749957148,
+    "seconds_to_best": 0.38287795800715685,
+    "split_stops": 0
+   },
+   "ffd": {
+    "cost_s": 17740,
+    "gap_rel": 0.04660766961651917,
+    "gap_g": 0.36506469500924216,
+    "reward": 0.5854773119287195,
+    "split_stops": 2
+   },
+   "stop_aware": [
+    {
+     "cost_s": 17498,
+     "gap_rel": 0.03233038348082596,
+     "gap_g": 0.2532347504621072,
+     "reward": 0.682095499777627,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 17738,
+     "gap_rel": 0.04648967551622419,
+     "gap_g": 0.36414048059149723,
+     "reward": 0.5861904982415271,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 17465,
+     "gap_rel": 0.0303834808259587,
+     "gap_g": 0.23798521256931607,
+     "reward": 0.6970254850404207,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 17729,
+     "gap_rel": 0.04595870206489675,
+     "gap_g": 0.3599815157116451,
+     "reward": 0.589416200664564,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 17414,
+     "gap_rel": 0.02737463126843658,
+     "gap_g": 0.2144177449168207,
+     "reward": 0.7210136483369245,
+     "split_stops": 0
+    }
+   ]
+  },
+  {
+   "name": "5486294a-spread-n14-k3-t0.9-s3",
+   "route_id": "RouteID_5486294a-503f-4346-b8a9-862e988cbe7c",
+   "stops": 14,
+   "packages": 22,
+   "vans": 3,
+   "capacity_cm3": 89413,
+   "floor_s": 10062,
+   "joint": {
+    "cost_s": 14668,
+    "status": "OPTIMAL",
+    "proved": true,
+    "bound": 14668.0,
+    "seconds_total": 1.5668207089765929,
+    "seconds_to_best": 0.720133375027217,
+    "split_stops": 0
+   },
+   "ffd": {
+    "cost_s": 19628,
+    "gap_rel": 0.3381510771748023,
+    "gap_g": 1.0539736506587336,
+    "reward": 0.297189669635723,
+    "split_stops": 5
+   },
+   "stop_aware": [
+    {
+     "cost_s": 18558,
+     "gap_rel": 0.26520316334878646,
+     "gap_g": 0.8266043348916277,
+     "reward": 0.3531477371651089,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 18067,
+     "gap_rel": 0.23172893373329698,
+     "gap_g": 0.7222694432639184,
+     "reward": 0.38868384585156424,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 17116,
+     "gap_rel": 0.16689391873466047,
+     "gap_g": 0.5201869953251169,
+     "reward": 0.48265801434243405,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 17448,
+     "gap_rel": 0.18952822470684483,
+     "gap_g": 0.5907352316192095,
+     "reward": 0.4454617828463101,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 18083,
+     "gap_rel": 0.23281974365966732,
+     "gap_g": 0.7256693582660434,
+     "reward": 0.3874051800571181,
+     "split_stops": 0
+    }
+   ]
+  },
+  {
+   "name": "693060a6-spread-n14-k3-t0.9-s4",
+   "route_id": "RouteID_693060a6-88bb-4324-9e9c-925d5240263c",
+   "stops": 14,
+   "packages": 19,
+   "vans": 3,
+   "capacity_cm3": 85921,
+   "floor_s": 7248,
+   "joint": {
+    "cost_s": 9435,
+    "status": "OPTIMAL",
+    "proved": true,
+    "bound": 9435.0,
+    "seconds_total": 0.5304792090319097,
+    "seconds_to_best": 0.1779132090159692,
+    "split_stops": 0
+   },
+   "ffd": {
+    "cost_s": 11032,
+    "gap_rel": 0.1692633810280869,
+    "gap_g": 0.6982947092260603,
+    "reward": 0.3979515510756998,
+    "split_stops": 3
+   },
+   "stop_aware": [
+    {
+     "cost_s": 10175,
+     "gap_rel": 0.0784313725490196,
+     "gap_g": 0.3235679930039353,
+     "reward": 0.6188344530206262,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 9894,
+     "gap_rel": 0.04864864864864865,
+     "gap_g": 0.20069960647135987,
+     "reward": 0.7355062251366129,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 10443,
+     "gap_rel": 0.1068362480127186,
+     "gap_g": 0.44075207695671187,
+     "reward": 0.531327586660317,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 10446,
+     "gap_rel": 0.10715421303656598,
+     "gap_g": 0.4420638390905116,
+     "reward": 0.5304594799436303,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 10695,
+     "gap_rel": 0.13354531001589826,
+     "gap_g": 0.5509400961958898,
+     "reward": 0.46579664801653936,
+     "split_stops": 0
+    }
+   ]
+  },
+  {
+   "name": "7f5d87f0-spread-n14-k3-t0.9-s5",
+   "route_id": "RouteID_7f5d87f0-c39f-434f-bf3f-b159ef321909",
+   "stops": 14,
+   "packages": 25,
+   "vans": 3,
+   "capacity_cm3": 107399,
+   "floor_s": 12810,
+   "joint": {
+    "cost_s": 16571,
+    "status": "OPTIMAL",
+    "proved": true,
+    "bound": 16571.0,
+    "seconds_total": 0.1975459170062095,
+    "seconds_to_best": 0.0872671669931151,
+    "split_stops": 1
+   },
+   "ffd": {
+    "cost_s": 17607,
+    "gap_rel": 0.06251885824633396,
+    "gap_g": 0.2683242683242683,
+    "reward": 0.66776367059821,
+    "split_stops": 2
+   },
+   "stop_aware": [
+    {
+     "cost_s": 17235,
+     "gap_rel": 0.04007000181039165,
+     "gap_g": 0.171976171976172,
+     "reward": 0.7671701708842618,
+     "split_stops": 1
+    },
+    {
+     "cost_s": 17366,
+     "gap_rel": 0.04797537867358639,
+     "gap_g": 0.20590520590520592,
+     "reward": 0.7299598854531824,
+     "split_stops": 1
+    },
+    {
+     "cost_s": 17484,
+     "gap_rel": 0.05509625248928852,
+     "gap_g": 0.23646723646723647,
+     "reward": 0.6985367235203919,
+     "split_stops": 1
+    },
+    {
+     "cost_s": 17473,
+     "gap_rel": 0.05443244221833323,
+     "gap_g": 0.2336182336182336,
+     "reward": 0.7013854970679756,
+     "split_stops": 1
+    },
+    {
+     "cost_s": 17569,
+     "gap_rel": 0.060225695492124795,
+     "gap_g": 0.2584822584822585,
+     "reward": 0.6770623574273749,
+     "split_stops": 1
+    }
+   ]
+  },
+  {
+   "name": "9475872b-spread-n14-k3-t0.9-s6",
+   "route_id": "RouteID_9475872b-287f-4c2c-8e29-887766a4e090",
+   "stops": 14,
+   "packages": 22,
+   "vans": 3,
+   "capacity_cm3": 60419,
+   "floor_s": 7617,
+   "joint": {
+    "cost_s": 10994,
+    "status": "OPTIMAL",
+    "proved": true,
+    "bound": 10994.0,
+    "seconds_total": 0.4040935409720987,
+    "seconds_to_best": 0.3007201660075225,
+    "split_stops": 0
+   },
+   "ffd": {
+    "cost_s": 12180,
+    "gap_rel": 0.10787702383118064,
+    "gap_g": 0.34109864825999425,
+    "reward": 0.6044040213742503,
+    "split_stops": 4
+   },
+   "stop_aware": [
+    {
+     "cost_s": 11627,
+     "gap_rel": 0.0575768601055121,
+     "gap_g": 0.182053494391717,
+     "reward": 0.755853482525036,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 11680,
+     "gap_rel": 0.06239767145715845,
+     "gap_g": 0.19729651998849582,
+     "reward": 0.7391634047095685,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 11890,
+     "gap_rel": 0.08149899945424777,
+     "gap_g": 0.25769341386252514,
+     "reward": 0.6778156076163584,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 11326,
+     "gap_rel": 0.030198289976350736,
+     "gap_g": 0.09548461317227495,
+     "reward": 0.8609264093296023,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 11695,
+     "gap_rel": 0.06376205202837912,
+     "gap_g": 0.2016105838366408,
+     "reward": 0.7345314453084895,
+     "split_stops": 0
+    }
+   ]
+  },
+  {
+   "name": "a8f0009d-spread-n14-k3-t0.9-s7",
+   "route_id": "RouteID_a8f0009d-e50a-49c9-84d3-f9885ad14a54",
+   "stops": 14,
+   "packages": 20,
+   "vans": 3,
+   "capacity_cm3": 47845,
+   "floor_s": 11658,
+   "joint": {
+    "cost_s": 13991,
+    "status": "OPTIMAL",
+    "proved": true,
+    "bound": 13991.0,
+    "seconds_total": 0.8446707080001943,
+    "seconds_to_best": 0.7675622910028324,
+    "split_stops": 0
+   },
+   "ffd": {
+    "cost_s": 15900,
+    "gap_rel": 0.13644485740833392,
+    "gap_g": 0.7846280312371557,
+    "reward": 0.36656001004805827,
+    "split_stops": 5
+   },
+   "stop_aware": [
+    {
+     "cost_s": 15032,
+     "gap_rel": 0.07440497462654563,
+     "gap_g": 0.4278668310727497,
+     "reward": 0.539977033065896,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 14695,
+     "gap_rel": 0.050318061611035664,
+     "gap_g": 0.2893547061241266,
+     "reward": 0.6484971448225774,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 14967,
+     "gap_rel": 0.06975913086984491,
+     "gap_g": 0.4011508425811755,
+     "reward": 0.5586367516897164,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 14829,
+     "gap_rel": 0.05989564720177257,
+     "gap_g": 0.3444307439375257,
+     "reward": 0.6017179557596768,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 14686,
+     "gap_rel": 0.04967479093703095,
+     "gap_g": 0.28565556925606245,
+     "reward": 0.6518275539182552,
+     "split_stops": 0
+    }
+   ]
+  },
+  {
+   "name": "bcc07fea-spread-n14-k3-t0.9-s8",
+   "route_id": "RouteID_bcc07fea-86d2-41e4-9a58-cfc78956dcc7",
+   "stops": 14,
+   "packages": 20,
+   "vans": 3,
+   "capacity_cm3": 43311,
+   "floor_s": 11127,
+   "joint": {
+    "cost_s": 13639,
+    "status": "OPTIMAL",
+    "proved": true,
+    "bound": 13639.0,
+    "seconds_total": 0.802620125003159,
+    "seconds_to_best": 0.5576522090123035,
+    "split_stops": 0
+   },
+   "ffd": {
+    "cost_s": 15516,
+    "gap_rel": 0.1376200601217098,
+    "gap_g": 0.7186064318529862,
+    "reward": 0.39007122378849135,
+    "split_stops": 2
+   },
+   "stop_aware": [
+    {
+     "cost_s": 14848,
+     "gap_rel": 0.08864286237993987,
+     "gap_g": 0.4628637059724349,
+     "reward": 0.5169944658134198,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 14606,
+     "gap_rel": 0.07089962607229269,
+     "gap_g": 0.37021439509954057,
+     "reward": 0.5815275020842195,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 14376,
+     "gap_rel": 0.054036219664198255,
+     "gap_g": 0.2821592649310873,
+     "reward": 0.6549980793829887,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 14438,
+     "gap_rel": 0.058582007478554146,
+     "gap_g": 0.305895865237366,
+     "reward": 0.6339025619219028,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 15143,
+     "gap_rel": 0.1102720140772784,
+     "gap_g": 0.5758039816232772,
+     "reward": 0.452902430569205,
+     "split_stops": 0
+    }
+   ]
+  },
+  {
+   "name": "d1a8c3dd-spread-n14-k3-t0.9-s9",
+   "route_id": "RouteID_d1a8c3dd-fa67-455c-a68d-af2fd6aa5d91",
+   "stops": 14,
+   "packages": 27,
+   "vans": 3,
+   "capacity_cm3": 86069,
+   "floor_s": 6192,
+   "joint": {
+    "cost_s": 8816,
+    "status": "OPTIMAL",
+    "proved": true,
+    "bound": 8816.0,
+    "seconds_total": 1.3647505000117235,
+    "seconds_to_best": 0.5896104580024257,
+    "split_stops": 0
+   },
+   "ffd": {
+    "cost_s": 10693,
+    "gap_rel": 0.21290834845735027,
+    "gap_g": 0.6890602055800293,
+    "reward": 0.401641489579351,
+    "split_stops": 5
+   },
+   "stop_aware": [
+    {
+     "cost_s": 9913,
+     "gap_rel": 0.12443284936479129,
+     "gap_g": 0.4027165932452276,
+     "reward": 0.5575154368412907,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 9801,
+     "gap_rel": 0.11172867513611615,
+     "gap_g": 0.36160058737151246,
+     "reward": 0.5881572546197121,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 9503,
+     "gap_rel": 0.07792649727767695,
+     "gap_g": 0.2522026431718062,
+     "reward": 0.6830916761446774,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 9675,
+     "gap_rel": 0.09743647912885663,
+     "gap_g": 0.315345080763583,
+     "reward": 0.6257794827598617,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 9729,
+     "gap_rel": 0.10356170598911071,
+     "gap_g": 0.33516886930983847,
+     "reward": 0.6092286265753166,
+     "split_stops": 0
+    }
+   ]
+  }
+ ]
+}

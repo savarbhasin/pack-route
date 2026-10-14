@@ -1,0 +1,10 @@
+{
+ "name": "2b8df66d-cluster-n30-k3-t0.9-s1",
+ "cost_s": 10310,
+ "floor_s": 8544,
+ "status": "OPTIMAL",
+ "proved": true,
+ "bound": 10310.0,
+ "seconds_total": 122.37745912501123,
+ "seconds_to_best": 6.6287215409683995
+}

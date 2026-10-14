@@ -1,0 +1,75 @@
+{
+ "args": {
+  "data_dir": "../../data/amazon-lmrc/apply",
+  "out": "results/smoke.json",
+  "stops": "10",
+  "vans": "3",
+  "tightness": "0.9",
+  "instances": "1",
+  "time_limit": "60.0"
+ },
+ "results": [
+  {
+   "name": "15baae2d-n10-k3-t0.9-s0",
+   "route_id": "RouteID_15baae2d-bf07-4967-956a-173d4036613f",
+   "stops": 10,
+   "packages": 17,
+   "vans": 3,
+   "capacity_cm3": 43842,
+   "floor_s": 10719,
+   "joint": {
+    "cost_s": 11265,
+    "status": "OPTIMAL",
+    "proved": true,
+    "bound": 11265.0,
+    "seconds_total": 0.2275007080170326,
+    "seconds_to_best": 0.0845445420127362,
+    "split_stops": 2
+   },
+   "ffd": {
+    "cost_s": 11497,
+    "gap_rel": 0.020594762538837106,
+    "gap_g": 0.3591331269349845,
+    "reward": 0.5900775142250909,
+    "split_stops": 4
+   },
+   "stop_aware": [
+    {
+     "cost_s": 11462,
+     "gap_rel": 0.017487794052374613,
+     "gap_g": 0.30495356037151705,
+     "reward": 0.6347210699545498,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 11528,
+     "gap_rel": 0.02334664891256103,
+     "gap_g": 0.4071207430340557,
+     "reward": 0.5543801622599698,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 11426,
+     "gap_rel": 0.014292055037727474,
+     "gap_g": 0.24922600619195046,
+     "reward": 0.6859762309936561,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 11442,
+     "gap_rel": 0.015712383488681758,
+     "gap_g": 0.2739938080495356,
+     "reward": 0.6624896191265758,
+     "split_stops": 0
+    },
+    {
+     "cost_s": 11439,
+     "gap_rel": 0.01544607190412783,
+     "gap_g": 0.2693498452012384,
+     "reward": 0.6668051987119521,
+     "split_stops": 0
+    }
+   ]
+  }
+ ]
+}
