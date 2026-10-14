@@ -30,7 +30,7 @@ Metrics: `valid`, `gap_pct`, `gap_g`, `checks_used`, `beats_stop_aware`, `beats_
 
 ## Tasks
 
-`pack_route/data/tasks-v0.jsonl` holds 10 tasks: 14 stops spread across one real route, 3 vans, synthetic capacity
+`pack_route/data/tasks-v0.jsonl` (also on Hugging Face: [dev-front/pack-route-tasks](https://huggingface.co/datasets/dev-front/pack-route-tasks)) holds 10 tasks: 14 stops spread across one real route, 3 vans, synthetic capacity
 at 90% fill, with every optimum proven in ≤ 2.2 s. Each row carries the public instance (what the tools serve) and a
 hidden `reference`: the optimum, floor, FFD and stop-aware baseline costs, and those plans. Rebuild or make more:
 
