@@ -15,6 +15,7 @@ from __future__ import annotations
 import json
 import math
 import random
+import threading
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -55,7 +56,7 @@ def load_raw(data_dir: Path):
 
 
 def make_instance(route_id, route, pkgs, tt, n_stops, n_vans, tightness, seed,
-                  sampling: str = "cluster") -> Instance:
+                  sampling: str = "cluster", workers: int = 0) -> Instance:
     """n stops from one real route: `cluster` = a seed stop + its nearest neighbours by travel
     time; `spread` = n random stops from the whole route.
 
@@ -80,7 +81,7 @@ def make_instance(route_id, route, pkgs, tt, n_stops, n_vans, tightness, seed,
             pkg_vol.append(max(1, round(d["depth_cm"] * d["height_cm"] * d["width_cm"])))
     total = sum(pkg_vol)
     capacity = max(math.ceil(total / (n_vans * tightness)), max(pkg_vol))
-    while not _packable(pkg_vol, n_vans, capacity):   # real parcels can be bulky: grow 2% until they fit
+    while not _packable(pkg_vol, n_vans, capacity, workers):   # real parcels can be bulky: grow 2% until they fit
         capacity = math.ceil(capacity * 1.02)
     m = [[round(tt[a][b]) for b in stops] for a in stops]
     return Instance(
@@ -90,7 +91,8 @@ def make_instance(route_id, route, pkgs, tt, n_stops, n_vans, tightness, seed,
     )
 
 
-def _packable(vols: list[int], n_vans: int, capacity: int) -> bool:
+def _packable(vols: list[int], n_vans: int, capacity: int, workers: int = 0) -> bool:
+    """workers=0 keeps CP-SAT's default (all cores)."""
     model = cp_model.CpModel()
     x = {(p, k): model.NewBoolVar("") for p in range(len(vols)) for k in range(n_vans)}
     for p in range(len(vols)):
@@ -98,6 +100,7 @@ def _packable(vols: list[int], n_vans: int, capacity: int) -> bool:
     for k in range(n_vans):
         model.Add(sum(v * x[p, k] for p, v in enumerate(vols)) <= capacity)
     solver = cp_model.CpSolver()
+    solver.parameters.num_workers = workers
     solver.parameters.max_time_in_seconds = 30
     return solver.Solve(model) in (cp_model.OPTIMAL, cp_model.FEASIBLE)
 
@@ -166,7 +169,7 @@ def _read_tour(solver, lit, nodes) -> list[int]:
     return tour
 
 
-def solve_tsp(inst: Instance, nodes: list[int]) -> list[int]:
+def solve_tsp(inst: Instance, nodes: list[int], workers: int = 8) -> list[int]:
     """Optimal closed tour station -> nodes -> station (small, proves instantly)."""
     if not nodes:
         return []
@@ -177,18 +180,18 @@ def solve_tsp(inst: Instance, nodes: list[int]) -> list[int]:
         model.Add(v == 1)
     model.Minimize(cost)
     solver = cp_model.CpSolver()
-    solver.parameters.num_workers = 8
+    solver.parameters.num_workers = workers
     solver.parameters.max_time_in_seconds = 60
     st = solver.Solve(model)
     assert st == cp_model.OPTIMAL, f"TSP not proven: {solver.StatusName(st)}"
     return _read_tour(solver, lit, nodes)
 
 
-def route_given_packing(inst: Instance, assign: list[int], meta: dict) -> Plan:
+def route_given_packing(inst: Instance, assign: list[int], meta: dict, workers: int = 8) -> Plan:
     tours = []
     for k in range(inst.n_vans):
         nodes = sorted({inst.pkg_stop[p] for p, a in enumerate(assign) if a == k})
-        tours.append(solve_tsp(inst, nodes))
+        tours.append(solve_tsp(inst, nodes, workers))
     return Plan(assign, tours, sum(tour_cost(inst, t) for t in tours), meta)
 
 
@@ -210,11 +213,14 @@ def pack_ffd(inst: Instance) -> list[int] | None:
     return assign
 
 
-def pack_stop_aware(inst: Instance, tie_seed: int) -> tuple[list[int], int]:
+def pack_stop_aware(inst: Instance, tie_seed: int, workers: int = 8, time_limit: float = 60,
+                    best_visits: int | None = None) -> tuple[list[int], int]:
     """Best packing a dispatcher could make without a map: fewest split stops.
 
     Many packings tie on that; a tiny random secondary objective picks one, so different
-    tie_seeds give different equally-good-to-the-packer packings.
+    tie_seeds give different equally-good-to-the-packer packings. Each pass gets `time_limit`;
+    on large instances the fewest-splits count may be the best found rather than proven.
+    Pass a previous call's `n + splits` as `best_visits` to skip the first pass.
     Returns (assignment, number of split stops).
     """
     P, K, n = len(inst.pkg_vol), inst.n_vans, inst.n
@@ -228,13 +234,14 @@ def pack_stop_aware(inst: Instance, tie_seed: int) -> tuple[list[int], int]:
     for k in range(K):
         model.Add(sum(inst.pkg_vol[p] * x[p, k] for p in range(P)) <= inst.capacity)
     visits = sum(y.values())  # n + number of extra visits caused by splits
-    model.Minimize(visits)
     solver = cp_model.CpSolver()
-    solver.parameters.num_workers = 8
-    solver.parameters.max_time_in_seconds = 60
-    st = solver.Solve(model)
-    assert st == cp_model.OPTIMAL, solver.StatusName(st)
-    best_visits = round(solver.ObjectiveValue())
+    solver.parameters.num_workers = workers
+    solver.parameters.max_time_in_seconds = time_limit
+    if best_visits is None:
+        model.Minimize(visits)
+        st = solver.Solve(model)
+        assert st in (cp_model.OPTIMAL, cp_model.FEASIBLE), solver.StatusName(st)
+        best_visits = round(solver.ObjectiveValue())
     # second pass: fix the primary objective, random tie-break among optimal packings
     model.Add(visits == best_visits)
     rng = random.Random(tie_seed)
@@ -258,7 +265,10 @@ class _Trace(cp_model.CpSolverSolutionCallback):
         self.found.append((time.perf_counter() - self.t0, self.ObjectiveValue()))
 
 
-def solve_joint(inst: Instance, time_limit: float = 300, workers: int = 8) -> Plan:
+def solve_joint(inst: Instance, time_limit: float = 300, workers: int = 8,
+                stall_seconds: float | None = None) -> Plan:
+    """Joint optimum. With `stall_seconds`, stop early once the best plan has not improved for
+    that long (the result is then usually unproven: `proved` False, `bound` a lower bound)."""
     P, K, n = len(inst.pkg_vol), inst.n_vans, inst.n
     nodes = list(range(1, n + 1))
     model = cp_model.CpModel()
@@ -283,7 +293,20 @@ def solve_joint(inst: Instance, time_limit: float = 300, workers: int = 8) -> Pl
     solver.parameters.max_time_in_seconds = time_limit
     trace = _Trace()
     t0 = time.perf_counter()
+    done = threading.Event()
+
+    def watch_stall():
+        while not done.wait(1.0):
+            last = trace.found[-1][0] if trace.found else None
+            if last is not None and time.perf_counter() - trace.t0 - last > stall_seconds:
+                solver.StopSearch()
+                return
+
+    watcher = threading.Thread(target=watch_stall, daemon=True) if stall_seconds else None
+    if watcher:
+        watcher.start()
     st = solver.Solve(model, trace)
+    done.set()
     wall = time.perf_counter() - t0
     if st not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
         raise RuntimeError(f"joint: {solver.StatusName(st)}")

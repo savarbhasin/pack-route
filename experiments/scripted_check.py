@@ -7,8 +7,7 @@ Policies:
   invalid   submit everything in one van                                expect < 0.2
   nop       answer in text, never submit                                expect 0.0
 
-usage: uv run python experiments/scripted_check.py [--policies oracle ffd invalid nop]
-"""
+usage: uv run python experiments/scripted_check.py [--tasks JSONL (default v1 train)] [--policies oracle ffd invalid nop]"""
 
 import argparse
 import asyncio
@@ -20,14 +19,15 @@ from pathlib import Path
 from aiohttp import web
 
 from pack_route.plan import PublicInstance, VanPlan, evaluate, grade
-from pack_route.taskset import DEFAULT_TASKS
+from pack_route.taskset import DATA
 from verifiers.v1.clients import EvalClientConfig, ModelContext
 from verifiers.v1.configs.cli.eval import EvalConfig
 from verifiers.v1.dialects.chat import ChatDialect
 from verifiers.v1.types import SamplingConfig
 from verifiers.v1.utils.loaders import harness_config_type, load_environment
 
-ROWS = [json.loads(line) for line in DEFAULT_TASKS.read_text().splitlines()]
+TASKS = DATA / "v1" / "train.jsonl"   # oracle and ffd need the reference plans
+ROWS: list[dict] = []
 
 
 def match_row(orders: dict) -> dict:
@@ -115,7 +115,7 @@ async def run_policy(policy: str) -> list[tuple[str, float, dict]]:
     os.environ["SCRIPTED_API_KEY"] = "scripted"
     try:
         config = EvalConfig(
-            env={"taskset": {"id": "pack_route"},
+            env={"taskset": {"id": "pack_route", "tasks_path": str(TASKS)},
                  "agent": {"harness": harness_config_type("null")(id="null"),
                            "runtime": {"type": "subprocess"}, "max_turns": 10}},
             select={"limit": len(ROWS)}, num_rollouts=1, model="scripted",
@@ -150,8 +150,12 @@ def expected(policy: str, row: dict) -> float:
 
 async def main():
     ap = argparse.ArgumentParser()
+    global TASKS
+    ap.add_argument("--tasks", type=Path, default=TASKS)
     ap.add_argument("--policies", nargs="+", default=["oracle", "ffd", "invalid", "nop"])
     args = ap.parse_args()
+    TASKS = args.tasks
+    ROWS.extend(json.loads(line) for line in TASKS.read_text().splitlines())
     by_id = {r["id"]: r for r in ROWS}
     ok = True
     for policy in args.policies:

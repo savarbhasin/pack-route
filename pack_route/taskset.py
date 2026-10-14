@@ -2,12 +2,13 @@
 
 Each task is a real 2018 route's stops, parcels and travel times. The agent reads them through
 tools, may price candidate plans with `check_plan`, and submits once. The grade compares the
-plan's total driving time with the joint pack+route optimum CP-SAT proved when the task was
-built (see `build_tasks.py`).
+plan's total driving time with the reference CP-SAT found when the task was built: the proven
+joint pack+route optimum, or the best plan known (see `build_tasks.py`).
 """
 
 import json
 from pathlib import Path
+from typing import Literal
 
 import verifiers.v1 as vf
 from pydantic import BaseModel
@@ -15,7 +16,8 @@ from pydantic import BaseModel
 from pack_route.plan import PublicInstance, VanPlan, grade, litres
 from pack_route.toolset import PackRouteState, PackRouteToolset
 
-DEFAULT_TASKS = Path(__file__).with_name("data") / "tasks-v0.jsonl"
+DATA = Path(__file__).with_name("data")
+DEFAULT_TASKS = DATA / "v1" / "test.jsonl"   # held out: Austin, answer plans removed
 
 PROMPT = """You are the dispatcher at a parcel delivery station. Today {n_stops} stops need {n_parcels} parcels, \
 and you have {n_vans} vans that each hold {capacity:.1f} litres.
@@ -44,14 +46,19 @@ plan scores very low."""
 
 class Reference(BaseModel):
     optimum_s: int
+    """The reference cost: the proven optimum, or the cheapest plan known (the anchor)."""
+    optimality: Literal["proven", "best_found"] = "proven"
+    lower_bound_s: int | None = None
+    """No plan costs less (the solver's bound; equals optimum_s when proven)."""
     floor_s: int
     solve_s: float
     ffd_s: int | None
     stop_aware_best_s: int
     stop_aware_mean_s: float
     route_id: str
-    plans: dict[str, list[VanPlan] | None]
-    """Reference plans (optimum, ffd, stop_aware_best). Never shown to the agent."""
+    plans: dict[str, list[VanPlan] | None] | None = None
+    """Reference plans (optimum, ffd, stop_aware_best). Never shown to the agent; left out of
+    published test splits."""
 
 
 class PackRouteData(vf.TaskData):
@@ -95,6 +102,7 @@ class PackRouteTask(vf.Task[PackRouteData, PackRouteState, PackRouteTaskConfig])
             stats |= {"gap_pct": 100 * (cost - ref.optimum_s) / ref.optimum_s,
                       "gap_g": grade(ev, ref.optimum_s, ref.floor_s)[1],
                       "beats_stop_aware": float(cost <= ref.stop_aware_best_s),
+                      "beats_reference": float(cost < ref.optimum_s),
                       "beats_ffd": float(ref.ffd_s is not None and cost <= ref.ffd_s)}
         return stats
 

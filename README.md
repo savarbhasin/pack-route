@@ -1,8 +1,8 @@
 # Pack Route
 
 A Verifiers v1 environment. The agent is the dispatcher at a parcel station: it decides which parcels ride in which
-van **and** the order each van visits its stops, on real 2018 Amazon Last Mile routes. It is graded against the joint
-pack+route optimum CP-SAT proved when the task was built. Packing first and routing second loses to that optimum on
+van **and** the order each van visits its stops, on real 2018 Amazon Last Mile routes. It is graded against the best
+joint pack+route plan CP-SAT found when the task was built. Packing first and routing second loses to that plan on
 every task (the "greedy trap"; see [experiments/README.md](experiments/README.md)).
 
 ## Tools 
@@ -21,43 +21,74 @@ carries it.
 
 ## Grade (PortSim reward v3)
 
-- **Valid:** `0.2 + 0.8·e^(−g/0.5)` with `g = (cost − optimum) / (optimum − floor + 100)`. The floor is the
-  depot legs no plan can avoid. The optimum scores 1.0.
+- **Valid:** `0.2 + 0.8·e^(−g/0.5)` with `g = max(0, cost − reference) / (reference − floor + 100)`. The reference is
+  `optimum_s`; the floor is the depot legs no plan can avoid. Matching or beating the reference scores 1.0.
 - **Invalid:** `0.2 ×` the share of parcels that ride in one van which visits their stop and is within capacity.
 - **No submission:** 0.
 
-Metrics: `valid`, `gap_pct`, `gap_g`, `checks_used`, `beats_stop_aware`, `beats_ffd`.
+Metrics: `valid`, `gap_pct`, `gap_g`, `checks_used`, `beats_stop_aware`, `beats_ffd`, `beats_reference` (the plan is
+cheaper than the best one the solver found).
 
 ## Tasks
 
-`pack_route/data/tasks-v0.jsonl` (also on Hugging Face: [dev-front/pack-route-tasks](https://huggingface.co/datasets/dev-front/pack-route-tasks)) holds 10 tasks: 14 stops spread across one real route, 3 vans, synthetic capacity
-at 90% fill, with every optimum proven in ≤ 2.2 s. Each row carries the public instance (what the tools serve) and a
-hidden `reference`: the optimum, floor, FFD and stop-aware baseline costs, and those plans. Rebuild or make more:
+Also on Hugging Face: [dev-front/pack-route-tasks](https://huggingface.co/datasets/dev-front/pack-route-tasks).
+
+| File | Tasks | Stops / vans | Reference |
+| --- | --- | --- | --- |
+| `pack_route/data/v1/train.jsonl` | 80: 20 each from Los Angeles, Seattle, Chicago, Boston | 20/3, 25/3, 30/4, 40/4, mixed | best found |
+| `pack_route/data/v1/test.jsonl` (default) | 10 from Austin, a city train never sees | same mix | best found; plans removed |
+| `pack_route/data/tasks-v0.jsonl` | 10 (the first release) | 14/3 | proven optimum |
+
+Each task takes one real route: a spread-out subset of its stops, their real parcels (23–155 per task) and the real
+travel times between them. The fleet is synthetic: 3 or 4 vans whose capacity makes the parcels fill 85–95% of it.
+Every task comes from a different route.
+
+Each row has the public `instance` (what the tools serve), a hidden `reference` and, in v1, `meta` (city, station,
+date, size, fill). The reference holds:
+- `optimum_s`, the cost the grade is measured against;
+- `optimality`: `proven` (v0) or `best_found` (v1);
+- `lower_bound_s`, the solver's proof that no plan is cheaper (median 13% below `optimum_s` in v1);
+- the floor and the FFD and stop-aware baseline costs;
+- `plans`: the reference, FFD and best stop-aware plans (`null` in v1 test).
+
+At 20–40 stops CP-SAT rarely proves the optimum on a laptop, so v1 uses the best plan found: the joint search stops
+after 30 s without improvement (at most 180 s), and the cheapest of its plan and the baselines becomes the reference. A
+model can beat it, which the `beats_reference` metric records. A route is kept only if the best stop-aware
+pack-then-route plan grades ≤ 0.9 against it. In v1 that plan grades 0.29–0.79 (mean 0.58, 11% more driving) and FFD
+0.25–0.70.
+
+Build v1 from the full training split (6,112 routes, 5 US metros; the travel-time file is 1.8 GB):
 
 ```bash
 uv sync -p 3.12
-mkdir -p data/apply && (cd data/apply && for f in new_route_data new_package_data new_travel_times; do
-  curl -fO "https://amazon-last-mile-challenges.s3.amazonaws.com/almrrc2021/almrrc2021-data-training/model_apply_inputs/$f.json"; done)
-uv run python -m pack_route.build_tasks data/apply pack_route/data/tasks-v0.jsonl --stops 14 --sampling spread
+S3=https://amazon-last-mile-challenges.s3.amazonaws.com/almrrc2021/almrrc2021-data-training/model_build_inputs
+mkdir -p data/build && (cd data/build && for f in route_data package_data travel_times; do curl -fO "$S3/$f.json"; done)
+uv run python -m pack_route.prepare_amazon data/build data/routes         # one small file per route
+uv run python -m pack_route.build_dataset data/routes pack_route/data/v1 \
+    --train-per-city 20 --test 10 --jobs 2 --workers 2 --time-limit 180 --stall 30
 ```
 
-That sample is 13 routes (~5 MB). The full training split has 6,112 routes across 5 US metros, with a 1.8 GB
-travel-time file.
+`touch pack_route/data/v1/STOP` stops the build after the running tasks finish; a re-run resumes. With 2 jobs × 2
+CP-SAT workers a task takes about 105 s. The build writes the test plans to `test.jsonl`; they were moved out before
+publishing. v0 was built with `pack_route.build_tasks` (see its docstring), which skips instances whose optimum is not
+proven.
 
-The builder checks that every reference plan, run through the agent-facing validator, is valid at exactly the
-solver's cost. It skips any instance whose optimum is not proven.
+The builders check that every reference plan, run through the agent-facing validator, is valid at exactly the
+solver's cost.
 
 ## Check and run
 
 ```bash
-uv run python experiments/scripted_check.py      # quality gates with a scripted model, no API key
+uv run python experiments/scripted_check.py      # quality gates with a scripted model on v1 train, no API key
+uv run python experiments/scripted_check.py --tasks pack_route/data/v1/test.jsonl --policies invalid nop
 uv run vf-eval pack_route --env.agent.harness.id null --env.agent.runtime.type subprocess \
-    --model <model> -n 10 --no-push              # a real model; needs PRIME_API_KEY, or --client.base-url / --client.api-key-var
+    --model <model> -n 10 --no-push              # a real model on v1 test; needs PRIME_API_KEY, or --client.base-url / --client.api-key-var
+# other tasks: --env.taskset.tasks_path pack_route/data/v1/train.jsonl
 ```
 
-Gates passing as of 2026-10-14:
-- oracle (submit the optimum) = 1.0 on 10/10;
-- FFD plan = the experiment's grade exactly (0.32–0.67);
+Gates passing as of 2026-10-15 on all 100 tasks (v1 test checked with its plans before they were removed):
+- oracle (submit the reference plan) = 1.0;
+- FFD plan = its expected grade exactly (0.25–0.70 on v1);
 - everything in one van = 0;
 - never submitting = 0.
 
@@ -73,8 +104,8 @@ The `bash` harness would let it write and run its own solver, which makes a diff
   [2021 Amazon Last Mile Routing Research Challenge dataset](https://registry.opendata.aws/amazon-last-mile-challenges)
   and released under the same licence, **[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)**
   (non-commercial).
-- **What was derived:** stop subsets, package volumes (rounded to decilitres) and travel times. Van capacities are
-  synthetic.
+- **What was derived:** stop subsets, package volumes (rounded to decilitres), travel times, and the station and date
+  of each route. Fleet sizes and van capacities are synthetic.
 - **Citation:** Merchán et al., "2021 Amazon Last Mile Routing Research Challenge: Data Set", *Transportation Science*
   (2022), [doi:10.1287/trsc.2022.1173](https://doi.org/10.1287/trsc.2022.1173).
 - **Inspired by:** the reward formula and the "real records + solver optimum" pattern come from

@@ -1,0 +1,23 @@
+== invalid: 10 episodes
+  ok  1548013c-spread-n20-k3-t0.9-s0: reward 0.0 (expected 0.0000) checks_used=1.0 valid=0.0
+  ok  224443a4-spread-n30-k4-t0.89-s0: reward 0.0 (expected 0.0000) checks_used=1.0 valid=0.0
+  ok  333da0a1-spread-n40-k4-t0.87-s0: reward 0.0 (expected 0.0000) checks_used=1.0 valid=0.0
+  ok  625d20d4-spread-n30-k4-t0.85-s0: reward 0.0 (expected 0.0000) checks_used=1.0 valid=0.0
+  ok  64e4fb54-spread-n40-k4-t0.93-s0: reward 0.0 (expected 0.0000) checks_used=1.0 valid=0.0
+  ok  68b265c4-spread-n20-k3-t0.91-s0: reward 0.0 (expected 0.0000) checks_used=1.0 valid=0.0
+  ok  87fa696f-spread-n20-k3-t0.88-s0: reward 0.0 (expected 0.0000) checks_used=1.0 valid=0.0
+  ok  e7cbb355-spread-n30-k4-t0.91-s0: reward 0.0 (expected 0.0000) checks_used=1.0 valid=0.0
+  ok  ebd1aebd-spread-n30-k4-t0.9-s0: reward 0.0 (expected 0.0000) checks_used=1.0 valid=0.0
+  ok  f4950ad1-spread-n40-k4-t0.93-s0: reward 0.0 (expected 0.0000) checks_used=1.0 valid=0.0
+== nop: 10 episodes
+  ok  1548013c-spread-n20-k3-t0.9-s0: reward 0.0 (expected 0.0000) checks_used=0.0 valid=0.0
+  ok  224443a4-spread-n30-k4-t0.89-s0: reward 0.0 (expected 0.0000) checks_used=0.0 valid=0.0
+  ok  333da0a1-spread-n40-k4-t0.87-s0: reward 0.0 (expected 0.0000) checks_used=0.0 valid=0.0
+  ok  625d20d4-spread-n30-k4-t0.85-s0: reward 0.0 (expected 0.0000) checks_used=0.0 valid=0.0
+  ok  64e4fb54-spread-n40-k4-t0.93-s0: reward 0.0 (expected 0.0000) checks_used=0.0 valid=0.0
+  ok  68b265c4-spread-n20-k3-t0.91-s0: reward 0.0 (expected 0.0000) checks_used=0.0 valid=0.0
+  ok  87fa696f-spread-n20-k3-t0.88-s0: reward 0.0 (expected 0.0000) checks_used=0.0 valid=0.0
+  ok  e7cbb355-spread-n30-k4-t0.91-s0: reward 0.0 (expected 0.0000) checks_used=0.0 valid=0.0
+  ok  ebd1aebd-spread-n30-k4-t0.9-s0: reward 0.0 (expected 0.0000) checks_used=0.0 valid=0.0
+  ok  f4950ad1-spread-n40-k4-t0.93-s0: reward 0.0 (expected 0.0000) checks_used=0.0 valid=0.0
+ALL GATES PASS

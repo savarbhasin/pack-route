@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Pack parcels into vans and route them, on real Amazon Last Mile routes; graded against the proven joint optimum."
 requires-python = ">=3.12,<3.14"
 dependencies = [
+    "ijson>=3.6.0",
     "ortools>=9.12",
     "verifiers @ git+https://github.com/PrimeIntellect-ai/verifiers@fd9c4afeb8879225a3448e8593fa908f05209e51",
 ]
