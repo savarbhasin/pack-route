@@ -1,11 +1,11 @@
-# pack_route
+# Pack Route
 
 A Verifiers v1 environment. The agent is the dispatcher at a parcel station: it decides which parcels ride in which
 van **and** the order each van visits its stops, on real 2018 Amazon Last Mile routes. It is graded against the joint
 pack+route optimum CP-SAT proved when the task was built. Packing first and routing second loses to that optimum on
 every task (the "greedy trap"; see [experiments/README.md](experiments/README.md)).
 
-## Tools (no container; one shared MCP server, per-rollout state)
+## Tools 
 
 | Tool | Returns |
 | --- | --- |
